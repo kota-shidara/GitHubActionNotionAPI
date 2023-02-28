@@ -1,0 +1,19 @@
+name: Spreadsheet Update
+
+on:
+  schedule:
+    - cron: '10 * * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo apt-get install -y mono-devel
+      - name: Run C# script
+        run: mono spreadsheet-update.exe
+        env:
+          NOTION_KEY: ${{ secrets.NOTION_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
