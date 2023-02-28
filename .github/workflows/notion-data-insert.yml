@@ -1,19 +1,25 @@
-name: Spreadsheet Update
+name: Nortion Data Insert
 
 on:
   schedule:
     - cron: '10 * * * *'
 
+
 jobs:
-  update:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: sudo apt-get install -y mono-devel
-      - name: Run C# script
-        run: mono spreadsheet-update.exe
-        env:
-          NOTION_KEY: ${{ secrets.NOTION_KEY }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+    - uses: actions/checkout@v2
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build and Run
+      run: |
+        dotnet run --project NotionAPI.csproj
+      env:
+        NOTION_KEY: ${{ secrets.NOTION_KEY }}
+        NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
